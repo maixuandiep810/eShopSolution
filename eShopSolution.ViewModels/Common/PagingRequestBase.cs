@@ -1,4 +1,4 @@
-namespace eShopSolution.Application.Dtos
+namespace eShopSolution.ViewModels.Common
 {
     public class PagingRequestBase
     {

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-namespace eShopSolution.Application.Dtos
+namespace eShopSolution.ViewModels.Common
 {
     public class PageResult<T>
     {
