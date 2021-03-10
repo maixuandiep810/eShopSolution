@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 namespace eShopSolution.Application.Dtos
 {
-    public class PageViewModel<T>
+    public class PageResult<T>
     {
-        public List<T> items { set; get; }
+        public List<T> Items { set; get; }
         public int TotalRecord { set; get; }
     }
 }
