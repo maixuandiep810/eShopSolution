@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using eShopSolution.ViewModels.Catalog.Products;
-using eShopSolution.ViewModels.Catalog.Products.Manage;
 using eShopSolution.ViewModels.Catalog.ProductImages;
 using eShopSolution.ViewModels.Common;
 
@@ -24,7 +23,7 @@ namespace eShopSolution.Application.Catalog.Products
 
         Task AddViewCount(int productId);
 
-        Task<PageResult<ProductViewModel>> GetAllPaging(GetProductPagingRequest request);
+        Task<PageResult<ProductViewModel>> GetAllPaging(GetManageProductPagingRequest request);
 
         Task<int> AddImage(int productId, ProductImageCreateRequest request);
 

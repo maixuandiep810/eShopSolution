@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 using eShopSolution.ViewModels.Catalog.Products;
-using eShopSolution.ViewModels.Catalog.Products.Public;
 using eShopSolution.ViewModels.Common;
 using eShopSolution.Data.EF;
 
@@ -18,7 +17,7 @@ namespace eShopSolution.Application.Catalog.Products
         {
             _context = context;
         }
-        public async Task<PageResult<ProductViewModel>> GetAllByCategoryId(GetProductPagingRequest request)
+        public async Task<PageResult<ProductViewModel>> GetAllByCategoryId(GetPublicProductPagingRequest request)
         {
             //1. Select join
             var query = from p in _context.Products
