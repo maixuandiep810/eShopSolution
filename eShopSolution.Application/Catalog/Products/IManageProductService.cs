@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using eShopSolution.ViewModels.Catalog.Products;
 using eShopSolution.ViewModels.Catalog.ProductImages;
 using eShopSolution.ViewModels.Common;
+using eShopSolution.Data.Entities;
 
 namespace eShopSolution.Application.Catalog.Products
 {
@@ -16,6 +17,7 @@ namespace eShopSolution.Application.Catalog.Products
         Task<int> Delete(int productId);
 
         Task<ProductViewModel> GetById(int productId, string languageId);
+        Task<Product> GetById(int productId);
 
         Task<bool> UpdatePrice(int productId, decimal newPrice);
 

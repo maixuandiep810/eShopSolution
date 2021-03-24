@@ -4,7 +4,6 @@ namespace eShopSolution.ViewModels.Catalog.Products
 {
     public class ProductCreateRequest
     {
-        public int Id { set; get; }
         public decimal Price { set; get; }
         public decimal OriginalPrice { set; get; }
         public int Stock { set; get; }

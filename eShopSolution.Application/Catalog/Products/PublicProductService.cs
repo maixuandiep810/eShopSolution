@@ -6,6 +6,7 @@ using eShopSolution.ViewModels.Catalog.Products;
 using eShopSolution.ViewModels.Common;
 using eShopSolution.Data.EF;
 using System.Collections.Generic;
+using eShopSolution.Data.Entities;
 
 namespace eShopSolution.Application.Catalog.Products
 {
@@ -63,16 +64,8 @@ namespace eShopSolution.Application.Catalog.Products
             return pageResult;
         }
 
-
-
-        public async Task<List<ProductViewModel>> GetAll()
+        private async Task<List<ProductViewModel>> GetAllDetailProduct(IQueryable<DetailProduct> query)
         {
-            var query = from p in _context.Products
-                        join pt in _context.ProductTranslations on p.Id equals pt.ProductId
-                        join pic in _context.ProductInCategories on p.Id equals pic.ProductId
-                        join c in _context.Categories on pic.CategoryId equals c.Id
-                        select new { p, pt, pic };
-
             var data = await query.Select(x => new ProductViewModel()
             {
                 Id = x.p.Id,
@@ -91,5 +84,40 @@ namespace eShopSolution.Application.Catalog.Products
             }).ToListAsync();
             return data;
         }
+
+
+        public async Task<List<ProductViewModel>> GetAll()
+        {
+            var query = from p in _context.Products
+                        join pt in _context.ProductTranslations on p.Id equals pt.ProductId
+                        join pic in _context.ProductInCategories on p.Id equals pic.ProductId
+                        join c in _context.Categories on pic.CategoryId equals c.Id
+                        select new DetailProduct { p = p, pt = pt, pic = pic };
+            return await GetAllDetailProduct(query);
+        }
+
+
+
+        public async Task<List<ProductViewModel>> GetAll(string languageId)
+        {
+            var query = from p in _context.Products
+                        join pt in _context.ProductTranslations on p.Id equals pt.ProductId
+                        join pic in _context.ProductInCategories on p.Id equals pic.ProductId
+                        join c in _context.Categories on pic.CategoryId equals c.Id
+                        where pt.LanguageId == languageId
+                        select new DetailProduct { p = p, pt = pt, pic = pic };
+            return await GetAllDetailProduct(query);
+        }
+
+
+
+
+    }
+
+    public class DetailProduct
+    {
+        public Product p { get; set; }
+        public ProductTranslation pt { get; set; }
+        public ProductInCategory pic { get; set; }
     }
 }
