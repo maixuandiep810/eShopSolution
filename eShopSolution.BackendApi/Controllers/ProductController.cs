@@ -84,7 +84,7 @@ namespace eShopSolution.BackendApi.Controllers
 
 
         // route: POST:domain/api/products
-        [HttpPost]
+        [HttpPost()]
         public async Task<IActionResult> Create([FromForm] ProductCreateRequest request)
         {
             var productId = await _manageProductService.Create(request);
@@ -101,12 +101,12 @@ namespace eShopSolution.BackendApi.Controllers
 
 
         // route: PUT:domain/api/products
-        [HttpPut]
+        [HttpPut()]
         public async Task<IActionResult> Update([FromForm] ProductUpdateRequest request)
         {
             try
             {
-                var productId = _manageProductService.Update(request);
+                var productId = await _manageProductService.Update(request);
                 return Ok(productId);
             }
             catch (EShopException e)
