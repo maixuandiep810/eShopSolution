@@ -29,10 +29,10 @@ namespace eShopSolution.Application.Catalog.Products
 
 
 
-
         //
         //
         //                  PRODUCT
+        //                  CREATE - UPDATE - DELETE
         //
         //
 
@@ -76,7 +76,8 @@ namespace eShopSolution.Application.Catalog.Products
             }
 
             _context.Products.Add(product);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return product.Id;
         }
 
         public async Task<int> Update(ProductUpdateRequest request)
@@ -86,7 +87,8 @@ namespace eShopSolution.Application.Catalog.Products
 
             if (product == null || productTranslation == null)
             {
-                throw new EShopException("Cannot find a product with id: {productId}");
+                string message = $"Cannot find a product with id: {request.Id}";
+                throw new EShopException(message);
             }
 
             productTranslation.Name = request.Name;
@@ -107,16 +109,18 @@ namespace eShopSolution.Application.Catalog.Products
                     _context.ProductImages.Update(thumbnailImage);
                 }
             }
-
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return product.Id;
         }
 
         public async Task<int> Delete(int productId)
         {
             var product = await _context.Products.FindAsync(productId);
+
             if (product == null)
             {
-                throw new EShopException("Cannot find a product with id: {productId}");
+                string message = $"Cannot find a product with id: {productId}";
+                throw new EShopException(message);
             }
 
             var images = _context.ProductImages.Where(i => i.ProductId == productId);
@@ -129,14 +133,15 @@ namespace eShopSolution.Application.Catalog.Products
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdatePrice(int productId, decimal price)
+        public async Task<bool> UpdatePrice(ProductPriceUpdateRequest request)
         {
-            var product = await _context.Products.FindAsync(productId);
+            var product = await _context.Products.FindAsync(request.Id);
             if (product == null)
             {
-                throw new EShopException("Cannot find a product with id: {productId}");
+                string message = $"Cannot find a product with id: {request.Id}";
+                throw new EShopException(message);
             }
-            product.Price = price;
+            product.Price = request.Price;
 
             return await _context.SaveChangesAsync() > 0;
         }
@@ -146,7 +151,8 @@ namespace eShopSolution.Application.Catalog.Products
             var product = await _context.Products.FindAsync(productId);
             if (product == null)
             {
-                throw new EShopException("Cannot find a product with id: {productId}");
+                string message = $"Cannot find a product with id: {productId}";
+                throw new EShopException(message);
             }
             product.Stock += addedQuantity;
 
@@ -157,16 +163,46 @@ namespace eShopSolution.Application.Catalog.Products
         public async Task AddViewCount(int productId)
         {
             var product = await _context.Products.FindAsync(productId);
+            if (product == null)
+            {
+                string message = $"Cannot find a product with id: {productId}";
+                throw new EShopException(message);
+            }
             product.ViewCount += 1;
             await _context.SaveChangesAsync();
         }
 
+
+
+        //
+        //
+        //                  PRODUCT
+        //                  READ
+        //
+        //
+
+        public async Task<Product> GetById(int productId)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null)
+            {
+                string message = $"Cannot find a product with id: {productId}";
+                throw new EShopException(message);
+            }
+            return product;
+        }
 
         public async Task<ProductViewModel> GetById(int productId, string languageId)
         {
             var product = await _context.Products.FindAsync(productId);
             var productTranslation = await _context.ProductTranslations.FirstOrDefaultAsync(x => x.ProductId == productId
             && x.LanguageId == languageId);
+
+            if (product == null || productTranslation == null)
+            {
+                string message = $"Cannot find a product with id: {productId}";
+                throw new EShopException(message);
+            }
 
             var productViewModel = new ProductViewModel()
             {
@@ -269,17 +305,21 @@ namespace eShopSolution.Application.Catalog.Products
         {
             var productImage = await _context.ProductImages.FindAsync(imageId);
             if (productImage == null)
+            {
                 throw new EShopException($"Cannot find an image with id {imageId}");
+            }
             _context.ProductImages.Remove(productImage);
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateImage(int imageId, ProductImageUpdateRequest request)
+        public async Task<int> UpdateImage(int productId, ProductImageUpdateRequest request)
         {
-            var productImage = await _context.ProductImages.FindAsync(imageId);
+            var productImage = await _context.ProductImages.FindAsync(request.Id);
             if (productImage == null)
-                throw new EShopException($"Cannot find an image with id {imageId}");
-
+            {
+                throw new EShopException($"Cannot find an image with id {request.Id}");
+            }
+r3
             if (request.ImageFile != null)
             {
                 productImage.ImagePath = await this.SaveFile(request.ImageFile);
