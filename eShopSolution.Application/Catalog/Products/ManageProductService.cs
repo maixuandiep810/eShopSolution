@@ -133,15 +133,15 @@ namespace eShopSolution.Application.Catalog.Products
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdatePrice(int productId, decimal price)
+        public async Task<bool> UpdatePrice(ProductPriceUpdateRequest request)
         {
-            var product = await _context.Products.FindAsync(productId);
+            var product = await _context.Products.FindAsync(request.Id);
             if (product == null)
             {
-                string message = $"Cannot find a product with id: {productId}";
+                string message = $"Cannot find a product with id: {request.Id}";
                 throw new EShopException(message);
             }
-            product.Price = price;
+            product.Price = request.Price;
 
             return await _context.SaveChangesAsync() > 0;
         }
@@ -177,7 +177,7 @@ namespace eShopSolution.Application.Catalog.Products
         //
         //
         //                  PRODUCT
-        //                  CREATE
+        //                  READ
         //
         //
 
@@ -305,17 +305,21 @@ namespace eShopSolution.Application.Catalog.Products
         {
             var productImage = await _context.ProductImages.FindAsync(imageId);
             if (productImage == null)
+            {
                 throw new EShopException($"Cannot find an image with id {imageId}");
+            }
             _context.ProductImages.Remove(productImage);
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateImage(int imageId, ProductImageUpdateRequest request)
+        public async Task<int> UpdateImage(int productId, ProductImageUpdateRequest request)
         {
-            var productImage = await _context.ProductImages.FindAsync(imageId);
+            var productImage = await _context.ProductImages.FindAsync(request.Id);
             if (productImage == null)
-                throw new EShopException($"Cannot find an image with id {imageId}");
-
+            {
+                throw new EShopException($"Cannot find an image with id {request.Id}");
+            }
+r3
             if (request.ImageFile != null)
             {
                 productImage.ImagePath = await this.SaveFile(request.ImageFile);
