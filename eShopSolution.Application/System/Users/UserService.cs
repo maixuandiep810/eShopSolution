@@ -55,9 +55,12 @@ namespace eShopSolution.Application.System.Users
 
 
             // 3. Tao JWT
+
+            // Microsoft.IdentityModel.Tokens
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            // System.IdentityModel.Tokens.Jwt
             var token = new JwtSecurityToken(
                 _configuration["Tokens:Issuer"],
                 _configuration["Tokens:Issuer"],
@@ -66,6 +69,7 @@ namespace eShopSolution.Application.System.Users
                 signingCredentials: creds
                 );
 
+            // System.IdentityModel.Tokens.Jwt
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 

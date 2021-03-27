@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 using eShopSolution.ViewModels.Catalog.Products;
 using eShopSolution.ViewModels.Catalog.ProductImages;
 using eShopSolution.Utilities.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eShopSolution.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IPublicProductService _publicProductService;
@@ -245,7 +247,7 @@ namespace eShopSolution.BackendApi.Controllers
         }
 
         // ROUTE: GET:domain/api/products/1/images/1
-        [HttpDelete("{productid}/images/{imageId}")]
+        [HttpGet("{productid}/images/{imageId}")]
         public async Task<IActionResult> GetImageById(int productId, int imageId)
         {
             var image = await _manageProductService.GetImageById(imageId);
