@@ -319,7 +319,6 @@ namespace eShopSolution.Application.Catalog.Products
             {
                 throw new EShopException($"Cannot find an image with id {request.Id}");
             }
-r3
             if (request.ImageFile != null)
             {
                 productImage.ImagePath = await this.SaveFile(request.ImageFile);
