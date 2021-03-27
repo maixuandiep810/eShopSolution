@@ -21,6 +21,7 @@ namespace eShopSolution.AdminApp
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://localhost:4000", "https://localhost:4001");
                 });
     }
 }
